@@ -24,12 +24,11 @@ public class Lexer {
 		while (m.find()) {
 			if (m.group().equals("λ")) {
 				tokens.add("\\");
-			} else
-			{
+			} else {
 				tokens.add(m.group());
 			}
 		}
-
+		System.out.println(tokens);
 		return tokens;
 	}
 

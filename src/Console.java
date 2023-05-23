@@ -15,9 +15,14 @@ public class Console {
 		String input = cleanConsoleInput(); // see comment
 
 		while (!input.equalsIgnoreCase("exit")) {
-
+			if (input == null || input.isEmpty()) {
+				input = cleanConsoleInput();
+				continue;
+			}
 			ArrayList<String> tokens = lexer.tokenize(input);
-
+			System.out.println(tokens);
+			tokens = parser.addParensToLambdas(tokens);
+			System.out.println(tokens);
 			String output = "";
 
 			try {
