@@ -1,0 +1,10 @@
+a. Krish Arora
+b. 7
+c. 20
+d. N/A
+e. 100 ((100+100+100+100)/4=100)
+    1. 100: Passes all unit tests I created and in the lab instruction document
+    2. 100: Had other assessments, classwork, and applications for internships but still managed to complete the lab on time
+    3. 100: Worked towards a complete project with clean and maintainable code and an organized project structure
+    4. 100: Did not have a partner for this lab and completed it independently
+f. I have worked hard to create unit tests that cover the capabilities of my Lambda Lab and learned how to use Gradle in the process. Run them with `./gradlew test` to see the results or see `README.md` for more information. I have strived towards an organized project structure and clean code throughout the entirety of creating this project.
