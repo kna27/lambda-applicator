@@ -1,54 +1,91 @@
+package lambda;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The Console class is the main class of the program, and runs user input
+ * through the lexer and parser.
+ * 
+ * @author Krish Arora
+ */
 public class Console {
+	/**
+	 * The Scanner object that reads user input.
+	 */
 	private static Scanner in;
 
 	public static void main(String[] args) {
 		in = new Scanner(System.in);
 
+		// The lexer and parser are created here, and reused for each input.
 		Lexer lexer = new Lexer();
-		Parser parser = new Parser();
+		Parser parser = new Parser(new ArrayList<String>());
+		String input = cleanConsoleInput();
 
-		String input = cleanConsoleInput(); // see comment
-
+		// Exit the REPL when the user types "exit"
 		while (!input.equalsIgnoreCase("exit")) {
-			if (input == null || input.isEmpty()) {
+			// Tokenize the input
+			ArrayList<String> tokens = lexer.tokenize(input);
+			// If the input is empty, go to the next input
+			if (tokens.isEmpty()) {
 				input = cleanConsoleInput();
 				continue;
 			}
-			ArrayList<String> tokens = lexer.tokenize(input);
-			System.out.println(tokens);
-			tokens = parser.addParensToLambdas(tokens);
-			System.out.println(tokens);
+			// If the input is an assignment, set the variable to the first token
+			String variable = tokens.size() > 2 && tokens.get(1).equals("=") ? tokens.get(0) : null;
+			// Initialize the output string to be empty
 			String output = "";
 
+			// Try to parse the input
 			try {
-				Expression exp = parser.parse(tokens);
-				output = exp.toString();
+				// Set the tokens of the parser to the tokens of the lexer, pre-parse the input,
+				// then parse it
+				parser.tokens = tokens;
+				parser.preParse();
+				Expression exp = parser.parse();
+				// If the input is an assignment
+				if (variable != null) {
+					// If the expression is null, the variable is already defined
+					if (exp == null) {
+						output = tokens.get(0) + " is already defined.";
+					} else {
+						// Otherwise, add the expression to the definitions
+						output = "Added " + exp.toString() + " as " + variable;
+					}
+				} else {
+					// Otherwise, just set the output to the returned expression
+					output = exp.toString();
+				}
 			} catch (Exception e) {
+				// If the input is unparsable, print an error message
 				System.out.println("Unparsable expression, input was: \"" + input + "\"");
 				input = cleanConsoleInput();
 				continue;
 			}
 
+			// Print the output
 			System.out.println(output);
 
+			// Get the next input
 			input = cleanConsoleInput();
 		}
+		// Exit the REPL
 		System.out.println("Goodbye!");
 	}
 
-	/*
+	/**
+	 * This method was provided with the starter code
 	 * Collects user input, and ...
 	 * ... does a bit of raw string processing to (1) strip away comments,
 	 * (2) remove the BOM character that appears in unicode strings in Windows,
 	 * (3) turn all weird whitespace characters into spaces,
 	 * and (4) replace all λs with backslashes.
+	 * 
+	 * @return the cleaned input
 	 */
-
 	private static String cleanConsoleInput() {
 		System.out.print("> ");
 		String raw = in.nextLine();
@@ -59,6 +96,12 @@ public class Console {
 		return clean.replaceAll("λ", "\\\\");
 	}
 
+	/**
+	 * This method was provided with the starter code
+	 * 
+	 * @param input the string to remove whitespace characters from
+	 * @return the string with all whitespace characters removed
+	 */
 	public static String removeWeirdWhitespace(String input) {
 		String whitespace_chars = "" // dummy empty string for homogeneity
 				+ "\\u0009" // CHARACTER TABULATION
@@ -93,8 +136,6 @@ public class Console {
 		if (matcher.find()) {
 			result = matcher.replaceAll(" ");
 		}
-
 		return result;
 	}
-
 }
