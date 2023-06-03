@@ -24,7 +24,7 @@ public class Lexer {
 		input = input.replaceAll(";.*", "");
 		// Regex matching parentheses, backslashes, lambdas, periods, equals signs, and
 		// character(s)
-		String regex = "\\(|\\)|\\\\|\\λ|\\.|\\=|[\\w!?]+";
+        String regex = "\\(|\\)|\\\\|\\λ|\\.|\\=|[^\\s\\(\\)\\\\;\\.\\=\\λ]+";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(input);
 		// Add each token to the ArrayList
