@@ -5,7 +5,7 @@ This is my implementation of the Lambda Lab for Advanced Topics in Computer Scie
 
 ## Usage
 
-This project uses Gradle. To run:
+This project uses Gradle and JDK 17. To run:
 ```
 $ ./gradlew run
 ```
