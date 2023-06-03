@@ -33,6 +33,15 @@ public class Application implements Expression {
     }
 
     /**
+     * @return the expression with the variable substituted
+     */
+    @Override
+    public Expression substitute(Variable v, Expression e) {
+        // Substitute in both the left and the right expressions
+        return new Application(this.left.substitute(v, e), this.right.substitute(v, e));
+    }
+
+    /**
      * @return a string representation of the application: (left right)
      */
     public String toString() {

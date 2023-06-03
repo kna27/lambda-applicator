@@ -32,6 +32,16 @@ public class Function implements Expression {
     }
 
     /**
+     * @return the expression with the variable substituted
+     */
+    @Override
+    public Expression substitute(Variable v, Expression e) {
+        // If this function's variable is the one we're substituting, don't substitute
+        // in the function body, otherwise, substitute in the function body
+        return this.variable.equals(v) ? this : new Function(this.variable, this.expression.substitute(v, e));
+    }
+
+    /**
      * @return a string representation of the function: (λvariable.expression)
      */
     public String toString() {

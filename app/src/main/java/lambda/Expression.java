@@ -10,4 +10,13 @@ public interface Expression {
      * @return a deep copy of the expression
      */
     Expression deepCopy();
+
+    /**
+     * Substitutes a variable with an expression in the expression.
+     * 
+     * @param v the variable to substitute
+     * @param e the expression to substitute the variable with
+     * @return the expression with the variable substituted
+     */
+    Expression substitute(Variable v, Expression e);
 }

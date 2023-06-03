@@ -29,6 +29,16 @@ public class Variable implements Expression {
 	}
 
 	/**
+	 * @return the expression with the variable substituted
+	 */
+	@Override
+	public Expression substitute(Variable v, Expression e) {
+		// If this variable is the one we're substituting, return the substituting
+		// expression, otherwise, return the variable itself
+		return this.equals(v) ? e : this;
+	}
+
+	/**
 	 * @return whether the two variable's names are the same
 	 */
 	public boolean equals(Variable other) {
