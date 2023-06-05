@@ -80,19 +80,6 @@ public class Function implements Expression {
     }
 
     /**
-     * Alpha converts the function to a new name.
-     * 
-     * @param newName the new name of the variable
-     * @return the function with the variable renamed
-     */
-    public Function alphaConvert(String newName) {
-        Function newFunction = this.deepCopy();
-        newFunction.variable.name = newName;
-        newFunction.expression.substitute(this.variable, new Variable(newName));
-        return newFunction;
-    }
-
-    /**
      * @return a string representation of the function: (λvariable.expression)
      */
     public String toString() {
