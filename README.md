@@ -17,9 +17,9 @@ $ ./gradlew build
 ```
 
 ## Structure
-Code for the project is in `app/src/main/java/lambda/`.
+Code for the project is in `src/main/java/lambda/`.
 
-Tests are in `app/src/test/java/`.
+Tests are in `src/test/java/`.
 
 Instructions for the lab are `Lab_05_3.40_Lambda.docx`.
 
