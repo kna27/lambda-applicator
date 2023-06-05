@@ -33,11 +33,11 @@ public class Runner {
         if (expression instanceof Application) {
             Application app = (Application) expression;
             if (app.left instanceof Function) {
-                Function func = (Function) app.left;
-                Variable var = func.variable;
-                Expression body = func.expression;
+                Function function = (Function) app.left;
+                Variable variable = function.variable;
+                Expression body = function.expression;
                 Expression right = app.right.deepCopy();
-                return body.substitute(var, right);
+                return body.substitute(variable, right);
             } else {
                 // Try reducing left and right expressions if possible
                 Expression leftReduced = reduceRedex(app.left);

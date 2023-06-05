@@ -207,4 +207,23 @@ class ParserTest {
         assertEquals(expected2, inputRunner.run(exp2));
         assertEquals(expected3, inputRunner.run(store));
     }
+
+    @Test
+    void returnVariableNameFromReducedExpression() {
+        InputRunner inputRunner = new InputRunner();
+        String in1 = "false = λf.λx.x";
+        String in2 = "true = λx.λy.x";
+        String in3 = "and = λp.λq.p q p";
+        String in4 = "run and false true";
+
+        String expected1 = "Added (λf.(λx.x)) as false";
+        String expected2 = "Added (λx.(λy.x)) as true";
+        String expected3 = "Added (λp.(λq.((p q) p))) as and";
+        String expected4 = "false";
+
+        assertEquals(expected1, inputRunner.run(in1));
+        assertEquals(expected2, inputRunner.run(in2));
+        assertEquals(expected3, inputRunner.run(in3));
+        assertEquals(expected4, inputRunner.run(in4));
+    }
 }

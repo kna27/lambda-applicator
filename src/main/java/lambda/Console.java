@@ -42,7 +42,7 @@ public class Console {
 
 			// Checking if it is a populate command
 			if (tokens.size() == 3 && tokens.get(0).equals("populate")) {
-				// If the 2nd and 3rd tokens are parseable integers
+				// If the 2nd and 3rd tokens are parse-able integers
 				int start = parseStrToInt(tokens.get(1));
 				int end = parseStrToInt(tokens.get(2));
 				if (start < end && start >= 0) { // Ensure start is less than end
@@ -177,7 +177,7 @@ public class Console {
 	 * @param str the String to parse
 	 * @return the parsed integer, -1 if not parsable
 	 */
-	private static int parseStrToInt(String str) {
+	public static int parseStrToInt(String str) {
 		if (str.matches("\\d+")) {
 			return Integer.parseInt(str);
 		} else {
