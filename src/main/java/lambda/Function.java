@@ -56,6 +56,16 @@ public class Function implements Expression {
     }
 
     /**
+     * @return the free variables in the expression
+     */
+    @Override
+    public Set<String> freeVariables() {
+        Set<String> freeVariables = expression.freeVariables();
+        freeVariables.remove(variable.name); // Remove the function parameter
+        return freeVariables;
+    }
+
+    /**
      * Finds if there is a conflict between the old variable and the new expression.
      * 
      * @param oldVar  the old variable
@@ -70,30 +80,6 @@ public class Function implements Expression {
     }
 
     /**
-     * @return a string representation of the function: (λvariable.expression)
-     */
-    public String toString() {
-        return "(λ" + variable + "." + expression + ")";
-    }
-
-    /**
-     * @return the free variables in the expression
-     */
-    @Override
-    public Set<String> freeVariables() {
-        Set<String> freeVariables = expression.freeVariables();
-        freeVariables.remove(variable.name); // Remove the function parameter
-        return freeVariables;
-    }
-
-    /**
-     * @return if the expression is an alpha equivalent of the function
-     */
-    public boolean clashesWith(Set<String> names) {
-        return names.contains(variable.name);
-    }
-
-    /**
      * Alpha converts the function to a new name.
      * 
      * @param newName the new name of the variable
@@ -104,5 +90,12 @@ public class Function implements Expression {
         newFunction.variable.name = newName;
         newFunction.expression.substitute(this.variable, new Variable(newName));
         return newFunction;
+    }
+
+    /**
+     * @return a string representation of the function: (λvariable.expression)
+     */
+    public String toString() {
+        return "(λ" + variable + "." + expression + ")";
     }
 }

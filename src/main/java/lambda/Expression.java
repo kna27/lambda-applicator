@@ -11,7 +11,7 @@ public interface Expression {
     /**
      * @return a deep copy of the expression
      */
-    Expression deepCopy();
+    public Expression deepCopy();
 
     /**
      * Substitutes a variable with an expression in the expression.
@@ -20,10 +20,14 @@ public interface Expression {
      * @param e the expression to substitute the variable with
      * @return the expression with the variable substituted
      */
-    Expression substitute(Variable v, Expression e);
+    public Expression substitute(Variable v, Expression e);
 
     /**
      * @return the free variables in the expression as a set
      */
-    Set<String> freeVariables();
+
+    /**
+     * @return the free variables in the Expression
+     */
+    public Set<String> freeVariables();
 }

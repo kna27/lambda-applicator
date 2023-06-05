@@ -166,8 +166,7 @@ public class Parser {
             return this.definitions.getOrDefault(firstToken, new Variable(firstToken));
         }
 
-        // Otherwise it is an application
-        return parseApplication(expressionStart, length);
+        return parseApplication(expressionStart, length); // Otherwise it is an application
     }
 
     /**
@@ -195,8 +194,7 @@ public class Parser {
                 Expression expression;
                 // If it is a run command
                 if (tokens.get(0).equals("run")) {
-                    // Remove the run keyword
-                    tokens.remove(0);
+                    tokens.remove(0); // Remove the run keyword
                     expression = parseExpression(0, tokens.size());
                     // Run the expression
                     expression = Runner.run(expression);
@@ -207,7 +205,7 @@ public class Parser {
                     expression = parseExpression(0, tokens.size());
                 }
                 // Add the variable and its definition to the definitions Hashtable
-                definitions.put(variableName, expression);
+                this.definitions.put(variableName, expression);
                 return expression;
             }
         }

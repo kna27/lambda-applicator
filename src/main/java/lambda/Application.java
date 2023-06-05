@@ -36,6 +36,15 @@ public class Application implements Expression {
     }
 
     /**
+     * @return the expression with the variable substituted
+     */
+    @Override
+    public Expression substitute(Variable v, Expression e) {
+        // Substitute in both the left and the right expressions
+        return new Application(this.left.substitute(v, e), this.right.substitute(v, e));
+    }
+
+    /**
      * @return the free variables in the expression
      */
     @Override
@@ -44,15 +53,6 @@ public class Application implements Expression {
         freeVariables.addAll(left.freeVariables());
         freeVariables.addAll(right.freeVariables());
         return freeVariables;
-    }
-
-    /**
-     * @return the expression with the variable substituted
-     */
-    @Override
-    public Expression substitute(Variable v, Expression e) {
-        // Substitute in both the left and the right expressions
-        return new Application(this.left.substitute(v, e), this.right.substitute(v, e));
     }
 
     /**

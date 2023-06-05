@@ -15,22 +15,21 @@ public class Runner {
      * @return the reduced expression
      */
     public static Expression run(Expression expression) {
-        Expression reduced = reduceOnce(expression);
+        Expression reduced = reduceRedex(expression);
         while (reduced != null) {
             expression = reduced;
-            reduced = reduceOnce(expression);
+            reduced = reduceRedex(expression);
         }
         return expression;
     }
 
     /**
-     * Reduces the leftmost redex in the given expression once, returning the
-     * reduced expression
+     * Reduces the leftmost redex in the given expression
      *
      * @param expression the expression to reduce
      * @return the reduced expression, or null if no reduction is possible
      */
-    private static Expression reduceOnce(Expression expression) {
+    private static Expression reduceRedex(Expression expression) {
         if (expression instanceof Application) {
             Application app = (Application) expression;
             if (app.left instanceof Function) {
@@ -40,12 +39,13 @@ public class Runner {
                 Expression right = app.right.deepCopy();
                 return body.substitute(var, right);
             } else {
-                Expression leftReduced = reduceOnce(app.left);
+                // Try reducing left and right expressions if possible
+                Expression leftReduced = reduceRedex(app.left);
                 if (leftReduced != null) {
                     app.left = leftReduced;
                     return app;
                 }
-                Expression rightReduced = reduceOnce(app.right);
+                Expression rightReduced = reduceRedex(app.right);
                 if (rightReduced != null) {
                     app.right = rightReduced;
                     return app;
@@ -53,12 +53,13 @@ public class Runner {
             }
         } else if (expression instanceof Function) {
             Function func = (Function) expression;
-            Expression bodyReduced = reduceOnce(func.expression);
+            Expression bodyReduced = reduceRedex(func.expression);
             if (bodyReduced != null) {
                 func.expression = bodyReduced;
                 return func;
             }
         }
+        // Return null if no reduction is possible (already reduced or a Variable)
         return null;
     }
 }

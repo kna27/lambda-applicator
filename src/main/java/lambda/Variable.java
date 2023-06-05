@@ -15,16 +15,6 @@ public class Variable implements Expression {
 	public String name;
 
 	/**
-	 * @return the free variables in the expression
-	 */
-	@Override
-	public Set<String> freeVariables() {
-		Set<String> freeVariables = new HashSet<>();
-		freeVariables.add(this.name);
-		return freeVariables;
-	}
-
-	/**
 	 * Constructor for the Variable class.
 	 * 
 	 * @param name the name of the variable
@@ -49,6 +39,16 @@ public class Variable implements Expression {
 		// If this variable is the one we're substituting, return the substituting
 		// expression, otherwise, return the variable itself
 		return this.equals(v) ? e : this;
+	}
+
+	/**
+	 * @return the free variables in the expression
+	 */
+	@Override
+	public Set<String> freeVariables() {
+		Set<String> freeVariables = new HashSet<>();
+		freeVariables.add(this.name);
+		return freeVariables;
 	}
 
 	/**
