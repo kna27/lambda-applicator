@@ -3,6 +3,7 @@ package lambda;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * The Parser class converts tokens from the parser into an expression tree that
@@ -199,6 +200,9 @@ public class Parser {
                     expression = parseExpression(0, tokens.size());
                     // Run the expression
                     expression = Runner.run(expression);
+                    if (getKeyFromValue(expression) != null) {
+                        return new Variable(getKeyFromValue(expression));
+                    }
                 } else {
                     expression = parseExpression(0, tokens.size());
                 }
@@ -213,9 +217,32 @@ public class Parser {
         if (tokens.get(0).equals("run")) {
             tokens.remove(0);
             expression = Runner.run(parseExpression(0, tokens.size()));
+            if (getKeyFromValue(expression) != null) {
+                return new Variable(getKeyFromValue(expression));
+            }
         } else {
             expression = parseExpression(0, tokens.size());
         }
         return expression;
+    }
+
+    /**
+     * Gets the key from a value in the definitions Hashtable.
+     * 
+     * @param value the value to get the key from
+     * @return the key corresponding to the value
+     */
+    private String getKeyFromValue(Expression value) {
+        String key = null;
+        Iterator<String> itr = this.definitions.keySet().iterator();
+        String currentKey = null;
+
+        while (itr.hasNext()) {
+            currentKey = itr.next();
+            if (this.definitions.get(currentKey).toString().equals(value.toString())) {
+                return currentKey;
+            }
+        }
+        return key;
     }
 }
