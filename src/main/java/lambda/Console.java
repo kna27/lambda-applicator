@@ -1,5 +1,6 @@
 package lambda;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -36,34 +37,69 @@ public class Console {
 			}
 			// If the input is an assignment, set the variable to the first token
 			String variable = tokens.size() > 2 && tokens.get(1).equals("=") ? tokens.get(0) : null;
-			// Initialize the output string to be empty
-			String output = "";
+			boolean isPopulating = false; // If the input is a populate command
+			String output = ""; // Initialize the output string to be empty
 
-			// Try to parse the input
-			try {
-				// Set the tokens of the parser to the tokens of the lexer, pre-parse the input,
-				// then parse it
-				parser.tokens = tokens;
-				parser.preParse();
-				Expression exp = parser.parse();
-				// If the input is an assignment
-				if (variable != null) {
-					// If the expression is null, the variable is already defined
-					if (exp == null) {
-						output = tokens.get(0) + " is already defined.";
-					} else {
-						// Otherwise, add the expression to the definitions
-						output = "Added " + exp.toString() + " as " + variable;
+			// Checking if it is a populate command
+			if (tokens.size() == 3 && tokens.get(0).equals("populate")) {
+				// If the 2nd and 3rd tokens are parseable integers
+				int start = parseStrToInt(tokens.get(1));
+				int end = parseStrToInt(tokens.get(2));
+				if (start < end && start >= 0) { // Ensure start is less than end
+					isPopulating = true;
+					for (int i = start; i <= end; i++) {
+						if (i == 0) {
+							// Special case if 0
+							tokens = lexer.tokenize("0 = (λf.(λx.x))");
+						} else { // Otherwise generate the strings to tokenize and run
+							String application = "";
+							for (int j = 1; j < i; j++) {
+								application += "(f ";
+							}
+							String assignNumber = i + " = (λf.(λx.(f" + application + "x)))";
+							for (int j = 1; j < i; j++) {
+								assignNumber += ")";
+							}
+							tokens = lexer.tokenize(assignNumber);
+							parser.tokens = tokens;
+							try {
+								parser.preParse();
+								parser.parse();
+							} catch (ParseException e) {
+								System.out.println("Unparsable expression, input was: \"" + input + "\"");
+							}
+						}
 					}
-				} else {
-					// Otherwise, just set the output to the returned expression
-					output = exp.toString();
+					output = "Populated numbers " + start + " to " + end;
 				}
-			} catch (Exception e) {
-				// If the input is unparsable, print an error message
-				System.out.println("Unparsable expression, input was: \"" + input + "\"");
-				input = cleanConsoleInput();
-				continue;
+			}
+			if (!isPopulating) {
+				// Try to parse the input
+				try {
+					// Set the tokens of the parser to the tokens of the lexer, pre-parse the input,
+					// then parse it
+					parser.tokens = tokens;
+					parser.preParse();
+					Expression exp = parser.parse();
+					// If the input is an assignment
+					if (variable != null) {
+						// If the expression is null, the variable is already defined
+						if (exp == null) {
+							output = tokens.get(0) + " is already defined.";
+						} else {
+							// Otherwise, add the expression to the definitions
+							output = "Added " + exp.toString() + " as " + variable;
+						}
+					} else {
+						// Otherwise, just set the output to the returned expression
+						output = exp.toString();
+					}
+				} catch (Exception e) {
+					// If the input is unparsable, print an error message
+					System.out.println("Unparsable expression, input was: \"" + input + "\"");
+					input = cleanConsoleInput();
+					continue;
+				}
 			}
 
 			// Print the output
@@ -77,23 +113,19 @@ public class Console {
 	}
 
 	/**
-	 * This method was provided with the starter code
-	 * Collects user input, and ...
-	 * ... does a bit of raw string processing to (1) strip away comments,
-	 * (2) remove the BOM character that appears in unicode strings in Windows,
-	 * (3) turn all weird whitespace characters into spaces,
-	 * and (4) replace all λs with backslashes.
+	 * Collects user input and removes BOM character that appears in unicode strings
+	 * in Windows, removes comments and anything following them, turned blank
+	 * whitespace characters into spaces, and replaces all λs with backslashes
 	 * 
 	 * @return the cleaned input
 	 */
 	private static String cleanConsoleInput() {
 		System.out.print("> ");
-		String raw = in.nextLine();
-		String deBOMified = raw.replaceAll("\uFEFF", ""); // remove Byte Order Marker from UTF
-
-		String clean = removeWeirdWhitespace(deBOMified);
-
-		return clean.replaceAll("λ", "\\\\");
+		String input = in.nextLine();
+		input = input.replaceAll("\uFEFF", ""); // remove Byte Order Marker
+		input = input.replaceAll(";.*", ""); // remove comments
+		input = removeWeirdWhitespace(input);
+		return input.replaceAll("λ", "\\\\"); // replace lambda symbol with a backslash
 	}
 
 	/**
@@ -137,5 +169,19 @@ public class Console {
 			result = matcher.replaceAll(" ");
 		}
 		return result;
+	}
+
+	/**
+	 * Parses a String to an integer
+	 * 
+	 * @param str the String to parse
+	 * @return the parsed integer, -1 if not parsable
+	 */
+	private static int parseStrToInt(String str) {
+		if (str.matches("\\d+")) {
+			return Integer.parseInt(str);
+		} else {
+			return -1;
+		}
 	}
 }
