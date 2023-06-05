@@ -15,13 +15,10 @@ public class Runner {
      * @return the reduced expression
      */
     public static Expression run(Expression expression) {
-        while (true) {
-            Expression reduced = reduceOnce(expression);
-            if (reduced == null) {
-                break; // No more reductions are possible
-            } else {
-                expression = reduced;
-            }
+        Expression reduced = reduceOnce(expression);
+        while (reduced != null) {
+            expression = reduced;
+            reduced = reduceOnce(expression);
         }
         return expression;
     }
