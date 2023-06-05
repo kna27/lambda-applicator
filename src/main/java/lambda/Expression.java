@@ -23,7 +23,7 @@ public interface Expression {
     Expression substitute(Variable v, Expression e);
 
     /**
-     * @return
+     * @return the free variables in the expression as a set
      */
     Set<String> freeVariables();
 }
