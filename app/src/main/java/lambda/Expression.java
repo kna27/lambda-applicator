@@ -1,5 +1,7 @@
 package lambda;
 
+import java.util.Set;
+
 /**
  * The Expression interface represents a lambda expression.
  * 
@@ -19,4 +21,9 @@ public interface Expression {
      * @return the expression with the variable substituted
      */
     Expression substitute(Variable v, Expression e);
+
+    /**
+     * @return
+     */
+    Set<String> freeVariables();
 }

@@ -1,5 +1,8 @@
 package lambda;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The Application class represents the application of an expression to
  * another expression.
@@ -30,6 +33,17 @@ public class Application implements Expression {
     @Override
     public Application deepCopy() {
         return new Application(left.deepCopy(), right.deepCopy());
+    }
+
+    /**
+     * @return the free variables in the expression
+     */
+    @Override
+    public Set<String> freeVariables() {
+        Set<String> freeVariables = new HashSet<>();
+        freeVariables.addAll(left.freeVariables());
+        freeVariables.addAll(right.freeVariables());
+        return freeVariables;
     }
 
     /**

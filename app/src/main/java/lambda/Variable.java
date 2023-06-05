@@ -1,5 +1,8 @@
 package lambda;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The Variable class represents a variable in a lambda expression.
  * 
@@ -9,7 +12,17 @@ public class Variable implements Expression {
 	/**
 	 * The name of the variable.
 	 */
-	private String name;
+	public String name;
+
+	/**
+	 * @return the free variables in the expression
+	 */
+	@Override
+	public Set<String> freeVariables() {
+		Set<String> freeVariables = new HashSet<>();
+		freeVariables.add(this.name);
+		return freeVariables;
+	}
 
 	/**
 	 * Constructor for the Variable class.
